@@ -1,101 +1,91 @@
-#Task3
-
+# Task3
 import string
 import random
+import re
 
 alphabet_small = list(string.ascii_lowercase)
 alphabet_big = list(string.ascii_uppercase)
 digits_list = list(string.digits)
 punctuation_list = list(string.punctuation)
 
-print(alphabet_small)
-print(alphabet_big)
-print(digits_list)
-print(punctuation_list)
+#print(alphabet_small)
+#print(alphabet_big)
+#print(digits_list)
+#print(punctuation_list)
+# 1 Default password generation
+def raw_gen(format = "A4%d3%-%a2"):
+    tokens = ["d", "A", "a", "p", "-", "@"]
+    tokens_list = []
 
-#Length of the password
-#Format definition
-print("Chouse tokens in the next format A,a,d,p,-,@ with number of their repetitions")
+    try:
+        "[" in format
+        a = int(format.index("["))
+        b = int(format.index("]"))
+        print(a, b)
+        c = format[a + 1 : b]
+        print(c)
 
-tokens_row = input("Enter your tokens in format A4%d3%-%a2%: ") #Нужно перевести в список
-def token_creation(tokens_row):
-    tokens_list = tokens_row.split("%")
-
-    print(tokens_list)
-    new_tokens = ""
-    for simbol in newtokens_list:
-        if simbol == "A":
-            repetition = simbol
-            print(repetition)
-            for index in repetition:
-                if new_tokens == None:
-                    new_tokens = index
-                else:
-                    new_tokens = new_tokens + index
-
-    print(new_tokens)
-token_creation(tokens_row)
+        d = c.replace("%", "")
+        print(d)
+         =
+    except:
+        pass
 
 
-tokens = ["p", "d", "d", "d", "A", "A", "A", "a"]
-def token(tokens):
+    try:
+        if format.endswith("%"):
+            format = format[:-1]
+
+    finally:
+        raw_tokens = format.split("%")
+        print("Raw_tokens: ", raw_tokens)
+
+    for item in raw_tokens:
+        try:
+            count = int(item[1:])
+        except:
+            if item[1:] == "":
+                count = 1
+        try:
+            item[0] in tokens
+            type_token = item[0]
+        except:
+            type_token = None
+            count = None
+
+        block = type_token * count
+        tokens_list += block
+        #print("There is a block: ", block)
+    print("There is your tokens list: ", tokens_list)
+    return(tokens_list)
+
+def password_gen(raw_gen):
     pas = ''
-    for index in tokens:
-        if index == "a":
+    for token in raw_gen:
+        if token == "a":
             pas += random.choice(alphabet_small)
-        elif index == "A":
+        elif token == "A":
             pas += random.choice(alphabet_big)
-        elif index == "d":
+        elif token == "d":
             pas += random.choice(digits_list)
-        elif index == "p":
+        elif token == "p":
             pas += random.choice(punctuation_list)
-        elif index == "-":
+        elif token == "-":
             pas += "-"
-        elif index == "@":
+        elif token == "@":
             pas += "@"
-        else: print("Wrong token")
-    print(pas)
-token(tokens)
-'''
-a = [a-z]
-A = [A-Z]
-d = [0-9]
-p = punctuation
-- = -
-@ = @
-[ ] set type of token
+        #else: print("Wrong token")
+    print("Your password is: ", pas)
+password_gen(raw_gen("A4%[d%a%]3%-%a2%"))
+
+
+# 2 Password generation of the set length
+# 3 Set template for generate passwords
+# 4 From file
+# 5 Number of passwords
+# 6 Verbose mode
+# 7 Help
+
 
 #A4%d3%-%a2% => DHRF345-st
 #A4%[d%a%]3%-%a2% => DHRF3s4-st | FHGFds4-vt | DERS774-sd
-import random
-
-chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-number = input('количество паролей?'+ "\n")
-length = input('длина пароля?'+ "\n")
-number = int(number)
-length = int(length)
-for n in range(number):
-    password =''
-    for i in range(length):
-        password += random.choice(chars)
-    print(password)
-
-python -c "from random import choice "
-print(''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789%^*(-_=+)') for i in range(10)]))"
-
-
-import random as r
-c = 'abcdefghijklmnopqrstuvwxyz0123456789%^*(-_=+)'
-print(''.join([c[r.randint(0,len(c)-1)] for i in range(10)]))
-
-
-
-
-import random
-num = input('login ')
-pas = ''
-for x in range(16): #Количество символов (16)
-    pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')) 
-print('Hello, ', num, 'your password is: ', pas)
-
-'''
