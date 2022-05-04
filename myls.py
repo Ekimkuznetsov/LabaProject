@@ -1,22 +1,28 @@
+'''
 # myls.py
+import argparse
 import os
 import sys
+#Create the parser
+my_parser = argparse.ArgumentParser(description = 'List a content of a folder')
 
-if len(sys.argv) > 2:
-    print('You have specified too many arguments')
-    sys.exit()
+# Add the arguments
+my_parser.add_argument('Path',
+                       metavar='path',
+                       type=str,
+                       help='the path to list')
 
-if len(sys.argv) < 2:
-    print('You need to specify the path to be listed')
-    sys.exit()
+# Execute the parse_args() method
+args = my_parser.parse_args()
 
-input_path = sys.argv[1]
+input_path = args.Path
 
 if not os.path.isdir(input_path):
     print('The path specified does not exist')
     sys.exit()
 
 print('\n'.join(os.listdir(input_path)))
+'''
 
 
 
