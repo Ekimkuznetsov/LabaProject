@@ -7,17 +7,9 @@ alphabet_small = list(string.ascii_lowercase)
 alphabet_big = list(string.ascii_uppercase)
 digits_list = list(string.digits)
 punctuation_list = list(string.punctuation)
-
-#print(alphabet_small)
-#print(alphabet_big)
-#print(digits_list)
-#print(punctuation_list)
-
 # 1 Default password generation
-#Function to make tokens_list from raw_tokens
+#Function to make raw_tokens list from input
 def tokens_l(raw_tokens = "A4%d3%-%a2"):
-    tokens = ["d", "A", "a", "p", "-", "@"]
-    tokens_list = []
 
     try:
         if raw_tokens.endswith("%"):
@@ -29,20 +21,24 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
         "[" in raw_tokens
         a = int(raw_tokens.index("["))
         b = int(raw_tokens.index("]"))
-        print(a, b)
         c = raw_tokens[a + 1 : b]
-        print(c)
         d = c.replace("%", "")
-        print(d)
         raw_tokens = raw_tokens.replace(raw_tokens[a:b+1], d)
     except:
         pass
     raw_tokens = raw_tokens.split("%")
-    print("Raw_tokens: ", raw_tokens)
-    for token in raw_tokens:
+    #print("Raw_tokens: ", raw_tokens)
+    list_of_tokens(raw_tokens)
 
+# Function to create list of tokens from prepared raw_tokens list
+def list_of_tokens(raw_tokens):
+    tokens = ["d", "A", "a", "p", "-", "@"]
+    tokens_list = []
+    for token in raw_tokens:
         type_token = ''
         i = 0
+        block = ""
+
         try:
             while token[i] in tokens: type_token += token[i]; i +=1
         except:
@@ -53,24 +49,20 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
             if type_token in tokens:
                 count = 1
             else: print('Wrong template key : ', token); break
-        print('num is : ', count)
-#-----------------------------------------------------------------------------
-        block = ""
+
         if len(type_token) > 1:
             for i in range(count):
-                if
-                block += random.choice(list)
+                block = block + random.choice(type_token)
         else:
             block = count * type_token
         tokens_list += block
-        print("There is a block: ", block)
-    print("There is your tokens list: ", tokens_list)
-    return(tokens_list)
+    #print("There is your tokens list: ", tokens_list)
+    password_gen(tokens_list)
 
-
-def password_gen(raw_gen):
+#Function to generate password from the list
+def password_gen(tokens_list):
     pas = ''
-    for token in raw_gen:
+    for token in tokens_list:
         if token == "a":
             pas += random.choice(alphabet_small)
         elif token == "A":
@@ -83,9 +75,9 @@ def password_gen(raw_gen):
             pas += "-"
         elif token == "@":
             pas += "@"
-        #else: print("Wrong token")
     print("Your password is: ", pas)
-password_gen(tokens_l("A2%[d%a%]3%-%a2%"))
+
+tokens_l("A2%[d%a%]3%-%a2%")
 
 
 # 2 Password generation of the set length
