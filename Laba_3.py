@@ -19,6 +19,7 @@ def set_length(length = 10):
         tokens_list += random.choice(["a", "A", "d"])    #Randome chose from 3 types of tokens
     password_gen(tokens_list)                            #Start of password_gen function with new list of tokens
 
+
 # 1 Template password generation
 #Function to make raw_tokens list from input
 def tokens_l(raw_tokens = "A4%d3%-%a2"):
@@ -100,27 +101,31 @@ def password_gen(tokens_list):
 
 # Create the parser
 my_parser = argparse.ArgumentParser()
-
 # - l: Set length of password and generate random password from set {small lateral ASCII, big lateral ASCII,
 # digit}
-#add the argument
-my_parser.add_argument('-l', '--length', action='store', type=int)
-my_parser.add_argument('-t', '--template', action='store', type=str)
 
+
+#add the arguments
+my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help= "Set amount of the passwords")
+#my_parser.add_argument('-vvv', '--verbose', action='store', type=int, help= "Set length of the password")
+
+
+#mutually exclusive group created
+my_group = my_parser.add_mutually_exclusive_group(required=True)
+
+my_group.add_argument('-l', '--length', action='store', type=int, help= "Set length of the password")
+my_group.add_argument('-t', '--template', action='store', type=str, help=" Set password template")
+#my_parser.add_argument('-f', '--file', action='store', type=int, help= "Set length of the password")
 
 #Execute the parse_args() method
 args = my_parser.parse_args()
-if args.template:            # Template chose
-    list_of_tokens(args.t)
-elif args.length:
-    set_length(args.l)
+if args.template != None:
+    tokens_l(args.template)
+elif args.length !=None:
+    set_length(args.length)
 
 
 # 3 Set template for generate passwords
-
-
-
-
 # 4 From file
 # 5 Number of passwords
 # 6 Verbose mode
