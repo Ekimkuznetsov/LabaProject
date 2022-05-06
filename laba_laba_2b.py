@@ -29,7 +29,7 @@ import re
 
 #The function to check correct address and request assigning function
 def address_check():
-    ip_address = input('Enter IP Address: ')
+    ip_address = input('Enter IP Address in format 0.0.0.0: ')
     new_address = ip_address.split(".")
     if not re.match(r'[0-9]+(\.[0-9]+){3}', ip_address):
         print('Неправильный IP-адрес')

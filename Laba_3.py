@@ -1,22 +1,34 @@
 # Task3
 import string
 import random
+import argparse
 
 #Constants. Tokens groups
 alphabet_small = list(string.ascii_lowercase)
 alphabet_big = list(string.ascii_uppercase)
 digits_list = list(string.digits)
 punctuation_list = list(string.punctuation)
-# 1 Default password generation
+
+# 2 Password generation of the set length
+#Parameter -l
+#The function to generate tokens list for the password of set length
+def set_length(length = 10):
+    tokens_list = ""
+    #Iteration of every element of length
+    for i in range(length):
+        tokens_list += random.choice(["a", "A", "d"])    #Randome chose from 3 types of tokens
+    password_gen(tokens_list)                            #Start of password_gen function with new list of tokens
+
+# 1 Template password generation
 #Function to make raw_tokens list from input
 def tokens_l(raw_tokens = "A4%d3%-%a2"):
-
+    #To remove last "%" symbol
     try:
         if raw_tokens.endswith("%"):
             raw_tokens = raw_tokens[:-1]
     except:
         pass
-
+    #To solve "[""]" case
     try:
         "[" in raw_tokens
         a = int(raw_tokens.index("["))
@@ -25,7 +37,8 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
         d = c.replace("%", "")
         raw_tokens = raw_tokens.replace(raw_tokens[a:b+1], d)
     except:
-        pass
+        print("There is simple token list")
+
     raw_tokens = raw_tokens.split("%")
     #print("Raw_tokens: ", raw_tokens)
     list_of_tokens(raw_tokens)
@@ -40,19 +53,25 @@ def list_of_tokens(raw_tokens):
         block = ""
 
         try:
-            while token[i] in tokens: type_token += token[i]; i +=1
+            while token[i] in tokens:
+                type_token += token[i]
+                i += 1
         except:
-            if type_token == '': print('Wrong template key : ', token); break
-
-        try: count = int(token[i:])
+            if type_token == '':
+                print('Wrong template key : ', token)
+                break
+        try:
+            count = int(token[i:])
         except:
             if type_token in tokens:
                 count = 1
-            else: print('Wrong template key : ', token); break
+            else:
+                print('Wrong template key : ', token)
+                break
 
         if len(type_token) > 1:
             for i in range(count):
-                block = block + random.choice(type_token)
+                block += random.choice(type_token)
         else:
             block = count * type_token
         tokens_list += block
@@ -77,11 +96,31 @@ def password_gen(tokens_list):
             pas += "@"
     print("Your password is: ", pas)
 
-tokens_l("A2%[d%a%]3%-%a2%")
+#tokens_l("A2%[d%a%]3%-%a2%")
+
+# Create the parser
+my_parser = argparse.ArgumentParser()
+
+# - l: Set length of password and generate random password from set {small lateral ASCII, big lateral ASCII,
+# digit}
+#add the argument
+my_parser.add_argument('-l', '--length', action='store', type=int)
+my_parser.add_argument('-t', '--template', action='store', type=str)
 
 
-# 2 Password generation of the set length
+#Execute the parse_args() method
+args = my_parser.parse_args()
+if args.template:            # Template chose
+    list_of_tokens(args.t)
+elif args.length:
+    set_length(args.l)
+
+
 # 3 Set template for generate passwords
+
+
+
+
 # 4 From file
 # 5 Number of passwords
 # 6 Verbose mode
