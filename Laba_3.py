@@ -2,6 +2,8 @@
 import string
 import random
 import argparse
+from datetime import datetime
+
 
 #Constants. Tokens groups
 alphabet_small = list(string.ascii_lowercase)
@@ -19,6 +21,19 @@ def set_length(length = 10):
         tokens_list += random.choice(["a", "A", "d"])    #Randome chose from 3 types of tokens
     password_gen(tokens_list)                            #Start of password_gen function with new list of tokens
 
+#function to read lines from the file
+
+def from_file(n):
+    file_list = ""
+    with open (args.file, "r") as fn:
+        lines = fn.readlines()
+        for line in lines:
+            file_line = line.strip()
+
+            file_list += file_line + "_%"
+    #print(file_list)
+
+    tokens_l(file_list)
 
 # 1 Template password generation
 #Function to make raw_tokens list from input
@@ -38,15 +53,18 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
         d = c.replace("%", "")
         raw_tokens = raw_tokens.replace(raw_tokens[a:b+1], d)
     except:
-        print("There is simple token list")
+        pass
+        #print("There is simple token list")
 
     raw_tokens = raw_tokens.split("%")
     #print("Raw_tokens: ", raw_tokens)
     list_of_tokens(raw_tokens)
 
+
+
 # Function to create list of tokens from prepared raw_tokens list
 def list_of_tokens(raw_tokens):
-    tokens = ["d", "A", "a", "p", "-", "@"]
+    tokens = ["d", "A", "a", "p", "-", "@", "_"]
     tokens_list = []
     for token in raw_tokens:
         type_token = ''
@@ -95,19 +113,22 @@ def password_gen(tokens_list):
             pas += "-"
         elif token == "@":
             pas += "@"
+        elif token == "_":
+            pas += "_"
+
     print("Your password is: ", pas)
+    print("Working time: ", datetime.now() - start_time)
 
 #tokens_l("A2%[d%a%]3%-%a2%")
 
 # Create the parser
+start_time = datetime.now()
+
 my_parser = argparse.ArgumentParser()
 # - l: Set length of password and generate random password from set {small lateral ASCII, big lateral ASCII,
 # digit}
 
 
-#add the arguments
-my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help= "Set amount of the passwords")
-#my_parser.add_argument('-vvv', '--verbose', action='store', type=int, help= "Set length of the password")
 
 
 #mutually exclusive group created
@@ -115,20 +136,39 @@ my_group = my_parser.add_mutually_exclusive_group(required=True)
 
 my_group.add_argument('-l', '--length', action='store', type=int, help= "Set length of the password")
 my_group.add_argument('-t', '--template', action='store', type=str, help=" Set password template")
-#my_parser.add_argument('-f', '--file', action='store', type=int, help= "Set length of the password")
+my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
+my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help= "Set amount of the passwords")
+#my_parser.add_argument('-vvv', '--verbose', action='store', type=int, help= "Set length of the password")
 
 #Execute the parse_args() method
 args = my_parser.parse_args()
-if args.template != None:
-    tokens_l(args.template)
-elif args.length !=None:
-    set_length(args.length)
+
+#the function to Parse CLI
+def myParser(args):
+    if args.count != None:
+        for i in range(args.count):
+            if args.template != None:
+                tokens_l(args.template)
+            elif args.length != None:
+                set_length(args.length)
+            elif args.file != None:
+                n = args.file
+                from_file(n)
 
 
-# 3 Set template for generate passwords
+            else:
+                pass
+
+myParser(args)
+# 3 Set template for generate passwords____done
 # 4 From file
-# 5 Number of passwords
+
+
+
+# 5 Number of passwords __________________ done
 # 6 Verbose mode
+
+
 # 7 Help
 
 
