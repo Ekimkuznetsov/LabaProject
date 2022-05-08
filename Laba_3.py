@@ -8,17 +8,28 @@ from datetime import datetime
 #logger Initialization
 logger = logging.getLogger()
 
-#The verbose function to set the level of Verbosity
-def verbose_func(arg):
-    if arg == 1:
-        logging.basicConfig(level=logging.WARNING)
-    elif arg == 2:
-        logging.basicConfig(level=logging.DEBUG)
-    elif arg == 3:
-        logging.basicConfig(level=logging.INFO)
-    else:
-        logging.debug(f'Verbose mode will be set to level "DEBUG": ')
+#The verbose function to set the level of Verbosity (Logging)
+def verbose_func(loglevel):
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.debug('This message should appear on the console')
+    logging.info('So should this')
+    logging.warning('And this, too')
 
+'''
+    if arg == 1:
+        getattr(logging, arg.upper())
+        print(arg)
+    elif arg == 2:
+        getattr(logging, arg.upper())
+        print(arg)
+    elif arg == 3:
+        getattr(logging, arg.upper())
+        print(arg)
+    else:
+        getattr(logging, arg.DEBUG)
+        print('Verbose mode will be set to level "DEBUG": ')
+        print(arg)
+'''
 
 #The function to generate tokens list for the password of set length
 def set_length(length = 10):
@@ -147,7 +158,7 @@ my_group.add_argument('-l', '--length', action='store', type=int, help="Set leng
 my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template")
 my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
 my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
-my_parser.add_argument('-v', '--verbose', action='count', default=4, help="Different levels of logging -vvv")
+my_parser.add_argument('-v', '--verbose', action='count', default=2, help="Different levels of logging -vvv")
 
 #Execute the parse_args() method
 args = my_parser.parse_args()
