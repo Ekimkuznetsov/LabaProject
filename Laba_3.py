@@ -5,29 +5,36 @@ import argparse
 import logging
 from datetime import datetime
 
-#logger Initialization
-logger = logging.getLogger()
 
-#The verbose function to set the level of Verbosity
+
+# The verbose function to set the level of Verbosity
 def verbose_func(arg):
     if arg == 1:
-        logging.basicConfig(level=logging.WARNING)
+        logging.basicConfig(level="WARNING")
+        print("Level WARNING set")
     elif arg == 2:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level="INFO")
+        print("Level INFO set")
     elif arg == 3:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level="DEBUG")
+        print("Level DEBUG set")
     else:
-        logging.debug(f'Verbose mode will be set to level "DEBUG": ')
+        logging.warning(f'Verbose mode set to level "WARNING": ')
 
 
-#The function to generate tokens list for the password of set length
-def set_length(length = 10):
+# The function to generate tokens list for the password of set length
+def set_length(length=10):
+    global num
     tokens_list = ""
-    #Iteration of every element of length
+
     for i in range(length):
         tokens_list += random.choice(["a", "A", "d"])       #Randome chose from 3 types of tokens
+
+    tokens_list = (tokens_list + "_") * num
     logging.debug(f'tokens_list generated : {tokens_list}') #Logging message
     password_gen(tokens_list)                               #Start of password_gen function with clean list of tokens
+
+
 #The Function to read lines from the file
 def from_file(n):
     file_list = ""
@@ -36,45 +43,36 @@ def from_file(n):
         for line in lines:
             file_line = line.strip()
             file_list += file_line + "_%"
-            logging.debug(f'Special symbol _% was meeted: ')
-    logging.debug(f'file_list formated:  {file_list}')
+    logging.debug(f'List of tokens from file generated:  {file_list}')
     return tokens_l(file_list)
 
 
 #The Function to make raw_tokens list from input
 def tokens_l(raw_tokens = "A4%d3%-%a2"):
-    template = []
+    template = ""
     #To remove last "%" symbol
-    try:
-        if raw_tokens.endswith("%"):
-            template = raw_tokens[:-1]
-    except:
+    if raw_tokens.endswith("%"):
+        template = raw_tokens[:-1]
+    else:
         template = raw_tokens
         logging.info(f'Normal operation going:')
-    #To solve "[" and "]" case
-    try:
-        "[" in template
+    #To solve "[" case
+    if "[" in template:
         a = int(template.index("["))
         b = int(template.index("]"))
         c = template[a + 1 : b]
         d = c.replace("%", "")
         template = template.replace(template[a:b+1], d)
-        logging.info(f'There is simple token list:  {template}')
-    except:
-        logging.info(f'There is simple token list:  {template}')
-        #print("There is simple token list")
-
     template = template.split("%")
-    logging.debug(f'There is template to be formated:  {template}')
+    logging.debug(f'Template generated:  {template}')
     list_of_tokens(template)
-
 
 
 #The Function to create list of tokens from prepared raw_tokens list
 def list_of_tokens(template):
     tokens = ["d", "A", "a", "p", "-", "@", "_"]
     tokens_list = []
-
+    global num
     for token in template:
         type_token = ''
         i = 0
@@ -103,8 +101,8 @@ def list_of_tokens(template):
         else:
             block = count * type_token
         tokens_list += block
-
-    logger.warning(f'Ready? tokens_list generated: {tokens_list}')
+    tokens_list *= num
+    logger.debug(f'List of tokens generated: {tokens_list}')
     password_gen(tokens_list)
 
 #The Function to generate password from the list
@@ -127,60 +125,64 @@ def password_gen(tokens_list):
         elif token == "_":
             pas += "_"
     if "_" in pas:
-        pas = pas.replace("_", ", ")
-
-    print("Your password is: ", pas)
+        pas = pas.replace("_", " ")
+    logging.debug(f'Password generated:  {pas}')
+    print("Your password(s) is: \n", pas)
     print("Working time: ", datetime.now() - start_time)
-
-# parser runtime
-start_time = datetime.now()
-
-#Logger initialization
-
-
-# My parser variable
-my_parser = argparse.ArgumentParser()
-#mutually exclusive group created
-my_group = my_parser.add_mutually_exclusive_group(required=True)
-#Arguments set
-my_group.add_argument('-l', '--length', action='store', type=int, help="Set length of the password")
-my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template")
-my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
-my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
-my_parser.add_argument('-v', '--verbose', action='count', default=4, help="Different levels of logging -vvv")
-
-#Execute the parse_args() method
-args = my_parser.parse_args()
 
 #The Function to Parse CLI
 def myParser(args):
     if args.count != None:
         if args.verbose != None:
             verbose_func(args.verbose)
-            for i in range(args.count):
-                if args.template != None:
-                    tokens_l(args.template)
-                elif args.length != None:
-                    set_length(args.length)
-                elif args.file != None:
-                    n = args.file
-                    from_file(n)
-                else:
-                    logger.warning(f'Ready? tokens_list generated')
+            global num
+            num = args.count
+            if args.template != None:
+                tokens_l(args.template)
+            elif args.length != None:
+                set_length(args.length)
+            elif args.file != None:
+                n = args.file
+                from_file(n)
+            else:
+                print("nothing to work with")
         else:
             logger.warning(f"Nothing to show")
             print("Nothing to show")
     else:
         logger.warning(f"Ammount of passwords set to 0. <-c> <amount> ")
         print("Ammount of passwords set to 0. <-c> <amount> ")
-#Start of the program
-myParser(args)
+
+
+
+if __name__ == '__main__':
+    # parser runtime
+    start_time = datetime.now()
+    # logger Initialization
+    logger = logging.getLogger()
+    # My parser variable
+    my_parser = argparse.ArgumentParser()
+    #mutually exclusive group created
+    my_group = my_parser.add_mutually_exclusive_group(required=True)
+    #Arguments set
+    my_group.add_argument('-l', '--length', action='store', type=int, help="Set length of the password")
+    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template")
+    my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
+    my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
+    my_parser.add_argument('-v', '--verbose', action='count', default=0, help="Different levels of logging -vvv")
+    #Execute the parse_args() method
+    args = my_parser.parse_args()
+    #Start of the program
+    myParser(args)
+
+
+
 
 # 1 Template password generation___________done
 # 2 Password generation of the set length__done
 # 3 Set template for generate passwords____done
 # 4 From file _____________________________done
-# 5 Number of passwords ___________________done
-# 6 Verbose mode __________________________-
+# 5 Number of passwords ___________________done*
+# 6 Verbose mode __________________________done
 # 7 Help __________________________________
-# 8 Logging _______________________________-
+# 8 Logging _______________________________done
