@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 
-# The verbose function to set the level of Verbosity
+# The verbose function to set the level of Logging
 def verbose_func(arg):
     if arg == 1:
         logging.basicConfig(level="WARNING")
@@ -163,10 +163,10 @@ if __name__ == '__main__':
     # My parser variable
     my_parser = argparse.ArgumentParser()
     #mutually exclusive group created
-    my_group = my_parser.add_mutually_exclusive_group(required=True)
+    my_group = my_parser.add_mutually_exclusive_group(required=False)
     #Arguments set
     my_group.add_argument('-l', '--length', action='store', type=int, help="Set length of the password")
-    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template")
+    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template in format")
     my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
     my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
     my_parser.add_argument('-v', '--verbose', action='count', default=0, help="Different levels of logging -vvv")
@@ -182,7 +182,7 @@ if __name__ == '__main__':
 # 2 Password generation of the set length__done
 # 3 Set template for generate passwords____done
 # 4 From file _____________________________done
-# 5 Number of passwords ___________________done*
+# 5 Number of passwords ___________________done
 # 6 Verbose mode __________________________done
-# 7 Help __________________________________
+# 7 Help __________________________________done
 # 8 Logging _______________________________done
