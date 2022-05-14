@@ -1,17 +1,18 @@
-
 import csv
+from io import StringIO
 
-with open('ac.csv', 'rt') as f:
-    csv_reader = csv.reader(f, doublequote=True, delimiter=";")
-    count = 1
-    for line in csv_reader:
-        print(line)
-        count += 1
-        if count == 10:
-            break
+converted = StringIO()
+with open('access_log1.csv', 'rt') as f:
+    converted.write(f.read().replace('(', ']').replace(')', ']').replace('[', ']').replace('"', ']'))
+    csv_reader = csv.reader(converted, doublequote=True, delimiter=" ", quotechar=']')
 
-
-
+converted.seek(0)
+count = 1
+for line in csv_reader:
+    print(line)
+    count += 1
+    if count == 10:
+        break
 
 
 if __name__ == "__main__":
