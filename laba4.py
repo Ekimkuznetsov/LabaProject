@@ -17,30 +17,63 @@ def dsv_csv():
         if count == 10:
             break
 '''
-def tsv_csv():
-    #with open(file, 'rt') as f:
-        #csv_reader = csv.reader(f, doublequote=True, delimiter=";")
 
-    with open('access_log1.csv', 'rt') as csvfile:
-        dialect = csv.Sniffer().sniff(csvfile.read(1024))
+def without_header(file = 'ac.csv', newfile = 'new_ac.csv'): #default files names to simplify
+    #Reader creation
+    with open(file) as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(1024)) #To recognise a dialect of csv file
+        csv_file.seek(0) #Move to  the start of the file
+        reader = csv.reader(csv_file, dialect)
+
+        #Writing to the new file
+        with open(newfile, 'w') as new_file:
+            csv_writer = csv.writer(new_file)
+            for line in reader:
+                csv_writer.writerow(line)
+                print(line)
+    print('Without header')
+
+#check: Is csv file has header
+def header_check(file = 'ac.csv'):
+
+    with open(file, 'rt') as csvfile:
         header = csv.Sniffer().has_header(csvfile.read(1024))
-        print(header)
-        csvfile.seek(0)
-        reader = csv.reader(csvfile, dialect)
-        print(dialect)
-        for row in reader:
-            print(', '.join(row))
-    #10 lines print
-    #count = 1
-    #for line in csv_reader:
-        #print(line)
-        #count += 1
-        #if count == 10:
-            #break
+        return header
+
+#Function to read and write csv file with header
+def with_header(file = 'ac.csv', newfile = 'new_ac'):
+    #Header list creation
+    with open(file) as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(1024))
+        csv_file.seek(0)
+        reader = csv.reader(csv_file, dialect)
+        header = []
+        header = next(reader)
+    #Creation of file reader as Dictionary (!!!!!!!!!!!!!!delimeter or dialect???????????????????????)
+    with open(file) as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=';')
+        #Creation of Writer as a dictionary with header
+        with open(newfile, 'w') as new_file:
+            csv_writer = csv.DictWriter(new_file, fieldnames=header)
+            csv_writer.writeheader()
+            #And writing new csv file
+            for line in csv_reader:
+                csv_writer.writerow(line)
+                #print(line)
+
+    print("List of column names: ", header)
+
 
 if __name__ == "__main__":
     #dsv_csv()
-    tsv_csv()
+    if header_check():
+        print('With header')
+        with_header()
+
+    else:
+        print('Without header')
+        without_header()
+
     print("Let's go!")
 
 
@@ -48,3 +81,21 @@ if __name__ == "__main__":
 
 #Файл CSV должен содержать следующие колонки:
 #columns = ("MAC address", "hostname", "IPv4(null)", "IPv6(null)", "netmask(xxx.xxx.xxx.xxx)", "user login", "full user name", "email", "ssh private key", "ssh public key", "description host", "list of installed app","UUID")
+def read_and_write(file = 'ac.csv', newfile = 'new_ac'):
+    with open(file) as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(1024))
+        csv_file.seek(0)
+        reader = csv.reader(csv_file, dialect)
+        header = []
+        header = next(reader)
+
+    with open(file) as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=';')
+        with open(newfile, 'w') as new_file:
+            csv_writer = csv.DictWriter(new_file, fieldnames=header)
+            csv_writer.writeheader()
+            for line in csv_reader:
+                csv_writer.writerow(line)
+                #print(line)
+
+    print("List of column names: ", header)
