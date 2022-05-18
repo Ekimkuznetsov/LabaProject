@@ -43,13 +43,13 @@ def header_check(file = 'ac.csv'):
 def with_header(file = 'ac.csv', newfile = 'new_ac.csv'):
     #Header list creation
     with open(file) as csv_file:
-        dialect = csv.Sniffer().sniff(csv_file.read(1024)) #To recognise a dialect of csv file
+        dialect = csv.Sniffer().sniff(csv_file.read(2048)) #To recognise a dialect of csv file
         csv_file.seek(0) #Move to  the start of the file
         reader = csv.reader(csv_file, dialect)
         header = []
         header = next(reader)
         csv_file.seek(0)
-        csv_reader = csv.DictReader(csv_file, delimiter=';')
+        csv_reader = csv.DictReader(csv_file, dialect=dialect)
 
         #Creation of Writer as a dictionary with header
         with open(newfile, 'w') as new_file:
