@@ -1,5 +1,5 @@
 import csv
-from io import StringIO
+#from io import StringIO
 '''
 #For the case if the file not big and it is NO NESTED BRACKETS
 #Creating new file object
@@ -35,23 +35,22 @@ def without_header(file = 'ac.csv', newfile = 'new_ac.csv'): #default files name
 
 #check: Is csv file has header
 def header_check(file = 'ac.csv'):
-
     with open(file, 'rt') as csvfile:
         header = csv.Sniffer().has_header(csvfile.read(1024))
         return header
 
 #Function to read and write csv file with header
-def with_header(file = 'ac.csv', newfile = 'new_ac'):
+def with_header(file = 'ac.csv', newfile = 'new_ac.csv'):
     #Header list creation
     with open(file) as csv_file:
-        dialect = csv.Sniffer().sniff(csv_file.read(1024))
-        csv_file.seek(0)
+        dialect = csv.Sniffer().sniff(csv_file.read(1024)) #To recognise a dialect of csv file
+        csv_file.seek(0) #Move to  the start of the file
         reader = csv.reader(csv_file, dialect)
         header = []
         header = next(reader)
-    #Creation of file reader as Dictionary (!!!!!!!!!!!!!!delimeter or dialect???????????????????????)
-    with open(file) as csv_file:
+        csv_file.seek(0)
         csv_reader = csv.DictReader(csv_file, delimiter=';')
+
         #Creation of Writer as a dictionary with header
         with open(newfile, 'w') as new_file:
             csv_writer = csv.DictWriter(new_file, fieldnames=header)
@@ -81,21 +80,3 @@ if __name__ == "__main__":
 
 #Файл CSV должен содержать следующие колонки:
 #columns = ("MAC address", "hostname", "IPv4(null)", "IPv6(null)", "netmask(xxx.xxx.xxx.xxx)", "user login", "full user name", "email", "ssh private key", "ssh public key", "description host", "list of installed app","UUID")
-def read_and_write(file = 'ac.csv', newfile = 'new_ac'):
-    with open(file) as csv_file:
-        dialect = csv.Sniffer().sniff(csv_file.read(1024))
-        csv_file.seek(0)
-        reader = csv.reader(csv_file, dialect)
-        header = []
-        header = next(reader)
-
-    with open(file) as csv_file:
-        csv_reader = csv.DictReader(csv_file, delimiter=';')
-        with open(newfile, 'w') as new_file:
-            csv_writer = csv.DictWriter(new_file, fieldnames=header)
-            csv_writer.writeheader()
-            for line in csv_reader:
-                csv_writer.writerow(line)
-                #print(line)
-
-    print("List of column names: ", header)
