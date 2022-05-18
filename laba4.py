@@ -49,7 +49,7 @@ def with_header(file = 'ac.csv', newfile = 'new_ac.csv'):
         header = []
         header = next(reader)
         csv_file.seek(0)
-        csv_reader = csv.DictReader(csv_file, dialect=dialect)
+        csv_reader = csv.DictReader(csv_file, dialect=dialect) #Creation of Reader as a dictionary with dialect
 
         #Creation of Writer as a dictionary with header
         with open(newfile, 'w') as new_file:
