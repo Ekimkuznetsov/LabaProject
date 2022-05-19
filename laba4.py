@@ -1,5 +1,8 @@
 import csv
-#from io import StringIO
+import argparse
+import logging
+from datetime import datetime
+
 
 #good to make property
 def reader_dialected(file='ac.csv'):
@@ -65,55 +68,89 @@ def start():
         without_header()
 
 
-def row_select(fileI='ac.csv', fileO='new_ac.csv', delimiter=",", start=2, stop=4):
-    with open (fileI) as source:
-        with open (fileO, "w") as dest:
-            reader = csv.reader(source, delimiter=';')
-            writer = csv.writer(dest, skipinitialspace=True, delimiter=delimiter)
-            for row in list(reader)[start:stop]:
-                writer.writerow(row)
+def row_tables_select(fileI='ac.csv', fileO='new_ac.csv', delimiter=",", r1=None, r2=None, c1=None, c2=None):
 
-def tables_select(fileI='ac.csv', fileO='new_ac.csv', delimiter=",", start=2, stop=4):
+    #files, rows, columns
+
     with open (fileI) as source:
         with open (fileO, "w") as dest:
             reader = csv.reader(source, delimiter=';')
-            writer = csv.writer(dest, skipinitialspace=True, delimiter=delimiter)
-            for row in list(reader):
-                writer.writerow(row[start:stop])
+            writer = csv.writer(dest, delimiter=delimiter)
+            for row in list(reader)[r1:r2]:
+                writer.writerow(row[c1:c2])
+
+
+def myParser(args):
+    files = args.file.split(',')
+
+
+    if args.rows or args.columns:
+        if args.rows:
+            rows = args.rows.split(',')
+            if args.columns:
+                columns = args.columns.split(',')
+            else:
+
+        else:
+            columns = args.columns.split(',')
+            if args.rows:
+                rows = args.rows.split(','
+
+
+    if args.delimiter:
+        row_tables_select(fileI=files[0], fileO=files[1], delimiter=args.delimiter, )
+    else:
+        row_tables_select(fileI=files[0], fileO=files[1],)
+
 
 
 
 
 if __name__ == "__main__":
-    #row_select()
-    tables_select()
+
+    row_tables_select()
     #start()
-'''
-if __name__ == '__main__':
+
     # parser runtime
-    start_time = datetime.now()
+    #start_time = datetime.now()
     # logger Initialization
-    logger = logging.getLogger()
+    #logger = logging.getLogger()
     # My parser variable
     my_parser = argparse.ArgumentParser()
-    #mutually exclusive group created
-    my_group = my_parser.add_mutually_exclusive_group(required=False)
-    #Arguments set
-    файл Positional argument
-    фильтрация опция (столбцы, строки) (диапазон)(выражение(IP))
-    Работа с диапазоном, (берем диапазон(столбцы-строки), пишем изменения, возвращаем диапазон)
-    Задать разделитель (С каким разделителем сохранить)
 
+    my_parser.add_argument('-f', '--file', action='store', type=str, help="Source file, destination file", required=True)
+    my_parser.add_argument('-d', '--delimiter', action='store', type=str, help="Specify delimiter next way: '\t' for tab, ';' for ';' etc")
+    my_parser.add_argument('-r', '--rows', action='store', type=str, help="Specify rows: '1, 2' Use ',' as delimiter ")
+    my_parser.add_argument('-c', '--columns', action='store', type=str, help="Specify columns: (Start, Stop) exemple '1, 2' ")
 
-    my_group.add_argument('-l', '--length', action='store', type=int, help="Set length of the password")
-    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template in format")
-    my_group.add_argument('-f', '--file', action='store', type=str, help="Set password from file")
-    my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
-    my_parser.add_argument('-v', '--verbose', action='count', default=0, help="Different levels of logging -vvv")
     #Execute the parse_args() method
     args = my_parser.parse_args()
     #Start of the program
     myParser(args)
+
+
+
+'''
+if __name__ == '__main__':
+    
+
+    #Arguments set
+    
+    1) Записать csv в нужном формате____done
+    2) Выбока по столбцам_______________done
+    3) Выбока по строкам________________done
+    4) Фильтр по столбцу
+    5) Фильтр по строке
+    6) Разделитель
+    7) Файл
+
+
+
+    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template in format")
+   
+    my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
+    my_parser.add_argument('-v', '--verbose', action='count', default=0, help="Different levels of logging -vvv")
+
 
 
 
