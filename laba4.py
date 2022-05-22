@@ -5,6 +5,7 @@ import re
 
 
 #good to make property
+
 def reader_dialected(file='ac.csv'):
     # Reader creation
     with open(file) as csv_file:
