@@ -36,7 +36,9 @@ def header_check(file = 'ac.csv'):
         return header
 
 #Function to read and write csv file with header
-def with_header(file = 'ac.csv', newfile = 'new_ac.csv'):
+def with_header(args):
+    file = args.files.split(',')[0]
+    newfile = args.files.split(',')[0]
     #Header list creation
     with open(file) as csv_file:
         dialect = csv.Sniffer().sniff(csv_file.read(2048)) #To recognise a dialect of csv file
@@ -58,70 +60,85 @@ def with_header(file = 'ac.csv', newfile = 'new_ac.csv'):
     print("List of column names: ", header)
 
 #Function to chose option with or without header
-def start():
+def start(args):
     if header_check():
         print('With header')
-        with_header()
+        with_header(args)
 
     else:
         print('Without header')
-        without_header()
+        without_header(args)
 
 
-def row_tables_select(fileI='ac.csv', fileO='new_ac.csv', delimiter=",", r1=None, r2=None, c1=None, c2=None):
+def row_tables_select(args, delimiter=",", r1=None, r2=None, c1=None, c2=None):
+    file = args.file.split(',')[0]
+    print(file)
+    newfile = args.file.split(',')[1]
+    print(newfile)
+    if args.delimiter:
+        delimiter = args.delimiter
+
     print(r1, r2, c1, c2)
-    with open (fileI) as source:
-        with open (fileO, "w") as dest:
-            reader = csv.reader(source, delimiter=';')
+    with open (file) as source:
+        with open (newfile, "w") as dest:
+            reader = csv.reader(source, delimiter=',')
             writer = csv.writer(dest, delimiter=delimiter)
+            print("wtf")
+            print(reader)
             for row in list(reader)[r1:r2]:
+                print("row")
                 writer.writerow(row[c1:c2])
 
 
+
 def extraction(args):
-    files = args.file.split(',')
     if args.rows or args.columns:
         if args.rows:
+            print("rows is", args.rows)
             rows = args.rows.split(',')
+            print(rows)
             if args.columns:
                 columns = args.columns.split(',')
-                row_tables_select(fileI=files[0], fileO=files[1], r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
+                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
+                print('Columns presented')
             else:
-                row_tables_select(fileI=files[0], fileO=files[1], r1=int(rows[0]), r2=int(rows[1]))
+                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]))
         else:
             columns = args.columns.split(',')
-            row_tables_select(fileI=files[0], fileO=files[1], c1=int(columns[0]), c2=int(columns[1]))
-        print('r1, r2, c1, c2')
+            row_tables_select(args, c1=int(columns[0]), c2=int(columns[1]))
+            print('c1, c2')
     else:
-        row_tables_select(fileI=files[0], fileO=files[1])
+        row_tables_select(args)
 
 def filtering(args):
+    c1 = int(args.columns.split(',')[0])
+    c2 = int(args.columns.split(',')[1])
     params = args.pattern.split(',')
     files = args.file.split(',')
-    #pattern = params[1]
-    #columns or rows
-    if params[0] == 'c':
-        index = int(args.columns.split(',')[0])
-        with open(files[0]) as source:
-            with open(files[1], "w") as dest:
-                reader = csv.reader(source, delimiter=';')
-                writer = csv.writer(dest)
+    pattern = str(params[1])
+    with open(files[0]) as source:
+        with open(files[1], "w") as dest:
+            reader = csv.reader(source, delimiter=';')
+            writer = csv.writer(dest)
+            if params[0] == 'c':
                 for row in list(reader):
-                    if re.match(r'[0-2]+', row[index]):
+                    string = ' '.join(row[c1:c2])
+                    print(string)
+                    if re.search(pattern, string):
+                        writer.writerow(row[c1:c2])
+                        print('Mutch')
+                    else:
+                        print('Dont mutch1')
+                        pass
+            else:
+                for row in list(reader):
+                    string = ','.join(row)
+                    if re.search(pattern, string):
                         writer.writerow(row)
+                    else:
+                        print('Dont mutch')
+                        pass
     #by rows [0-9]+(\.[0-9]+){3}
-    else:
-        index = int(args.rows.split(',')[0])
-        with open(files[0]) as source:
-            with open(files[1], "w") as dest:
-                reader = csv.reader(source, delimiter=';')
-                writer = csv.writer(dest)
-                for row in list(reader):
-                    if re.match(r'[0-2]+', row):
-
-                        writer.writerow(row[2 - 5])
-
-
 
 
 def myParser(args):
@@ -129,12 +146,8 @@ def myParser(args):
         extraction(args)
     elif args.filtering:
         filtering(args)
-
-
-
-
-
-
+    else:
+        start(args)
 
 
 
@@ -164,34 +177,28 @@ if __name__ == "__main__":
     args = my_parser.parse_args()
     #Start of the program
     #myParser
-    filtering(args)
+    myParser(args)
 
 
 
 '''
-if __name__ == '__main__':
     
 
     #Arguments set
     
-    1) Записать csv в нужном формате____done
+    1) Записать csv в нужном формате____done---
     2) Выбока по столбцам_______________done
     3) Выбока по строкам________________done
-    4) Фильтр по столбцу
-    5) Фильтр по строке
-    6) Разделитель
-    7) Файл
-
-
-
-    my_group.add_argument('-t', '--template', action='store', type=str, help="Set password template in format")
-   
-    my_parser.add_argument('-c', '--count', action='store', type=int, default=1, help="Set amount of the passwords")
-    my_parser.add_argument('-v', '--verbose', action='count', default=0, help="Different levels of logging -vvv")
-
+    4) Фильтр по столбцу________________done
+    5) Фильтр по строке_________________done
+    6) Разделитель______________________
+    7) Файл_____________________________
+    8) json_____________________________
 
 
 
 '''
 #Файл CSV должен содержать следующие колонки:
 #columns = ("MAC address", "hostname", "IPv4(null)", "IPv6(null)", "netmask(xxx.xxx.xxx.xxx)", "user login", "full user name", "email", "ssh private key", "ssh public key", "description host", "list of installed app","UUID")
+
+
