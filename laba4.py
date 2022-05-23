@@ -72,21 +72,16 @@ def start(args):
 
 def row_tables_select(args, delimiter=",", r1=None, r2=None, c1=None, c2=None):
     file = args.file.split(',')[0]
-    print(file)
     newfile = args.file.split(',')[1]
-    print(newfile)
     if args.delimiter:
         delimiter = args.delimiter
 
     print(r1, r2, c1, c2)
     with open (file) as source:
         with open (newfile, "w") as dest:
-            reader = csv.reader(source, delimiter=',')
+            reader = csv.reader(source, delimiter=';')
             writer = csv.writer(dest, delimiter=delimiter)
-            print("wtf")
-            print(reader)
             for row in list(reader)[r1:r2]:
-                print("row")
                 writer.writerow(row[c1:c2])
 
 
@@ -110,20 +105,24 @@ def extraction(args):
     else:
         row_tables_select(args)
 
-def filtering(args):
+def filtering(args, delimiter=';'):
     c1 = int(args.columns.split(',')[0])
     c2 = int(args.columns.split(',')[1])
     params = args.pattern.split(',')
     files = args.file.split(',')
     pattern = str(params[1])
+    if args.delimiter:
+        delimiter = args.delimiter
     with open(files[0]) as source:
         with open(files[1], "w") as dest:
-            reader = csv.reader(source, delimiter=';')
+            reader = csv.reader(source, delimiter=delimiter)
             writer = csv.writer(dest)
             if params[0] == 'c':
                 for row in list(reader):
                     string = ' '.join(row[c1:c2])
+                    print(row)
                     print(string)
+                    print(pattern)
                     if re.search(pattern, string):
                         writer.writerow(row[c1:c2])
                         print('Mutch')
