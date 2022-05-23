@@ -6,7 +6,8 @@ import re
 
 #good to make property
 
-def reader_dialected(file='ac.csv'):
+def reader_dialected(args):
+    file = args.file.split(',')[0]
     # Reader creation
     with open(file) as csv_file:
         dialect = csv.Sniffer().sniff(csv_file.read(1024))  # To recognise a dialect of csv file
@@ -37,8 +38,8 @@ def header_check(file = 'ac.csv'):
 
 #Function to read and write csv file with header
 def with_header(args):
-    file = args.files.split(',')[0]
-    newfile = args.files.split(',')[0]
+    file = args.file.split(',')[0]
+    newfile = args.file.split(',')[0]
     #Header list creation
     with open(file) as csv_file:
         dialect = csv.Sniffer().sniff(csv_file.read(2048)) #To recognise a dialect of csv file
@@ -64,7 +65,6 @@ def start(args):
     if header_check():
         print('With header')
         with_header(args)
-
     else:
         print('Without header')
         without_header(args)
@@ -75,11 +75,11 @@ def row_tables_select(args, delimiter=",", r1=None, r2=None, c1=None, c2=None):
     newfile = args.file.split(',')[1]
     if args.delimiter:
         delimiter = args.delimiter
-
-    print(r1, r2, c1, c2)
     with open (file) as source:
+        dialect = csv.Sniffer().sniff(source.read(1024))  # To recognise a dialect of csv file
+        source.seek(0)  # Move to  the start of the file
+        reader = csv.reader(source, dialect)
         with open (newfile, "w") as dest:
-            reader = csv.reader(source, delimiter=';')
             writer = csv.writer(dest, delimiter=delimiter)
             for row in list(reader)[r1:r2]:
                 writer.writerow(row[c1:c2])
@@ -94,8 +94,8 @@ def extraction(args):
             print(rows)
             if args.columns:
                 columns = args.columns.split(',')
-                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
                 print('Columns presented')
+                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
             else:
                 row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]))
         else:
@@ -120,14 +120,11 @@ def filtering(args, delimiter=';'):
             if params[0] == 'c':
                 for row in list(reader):
                     string = ' '.join(row[c1:c2])
-                    print(row)
-                    print(string)
-                    print(pattern)
                     if re.search(pattern, string):
                         writer.writerow(row[c1:c2])
-                        print('Mutch')
+                        print('Match')
                     else:
-                        print('Dont mutch1')
+                        print('Dont match1')
                         pass
             else:
                 for row in list(reader):
