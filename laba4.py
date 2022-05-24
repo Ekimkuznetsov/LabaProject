@@ -77,11 +77,12 @@ def row_tables_select(args, delimiter=",", r1=None, r2=None, c1=None, c2=None):
     print(newfile)
     if args.delimiter:
         delimiter = args.delimiter
-
     print(r1, r2, c1, c2)
-    with open (file) as source:
-        with open (newfile, "w") as dest:
-            reader = csv.reader(source, delimiter=',')
+    with open(file) as source:
+        dialect = csv.Sniffer().sniff(source.read(2048))  # To recognise a dialect of csv file
+        source.seek(0)  # Move to  the start of the file
+        reader = csv.reader(source, dialect)
+        with open(newfile, "w") as dest:
             writer = csv.writer(dest, delimiter=delimiter)
             print("wtf")
             print(reader)
@@ -99,8 +100,8 @@ def extraction(args):
             print(rows)
             if args.columns:
                 columns = args.columns.split(',')
-                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
                 print('Columns presented')
+                row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]), c1=int(columns[0]), c2=int(columns[1]))
             else:
                 row_tables_select(args, r1=int(rows[0]), r2=int(rows[1]))
         else:
