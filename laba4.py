@@ -2,7 +2,23 @@ import csv
 import argparse
 import re
 # from datetime import datetime
+import json
 
+def csv_to_json(args):  # default files names to simplify
+    #files
+
+    # Reader creation
+    with open(file) as csv_file:
+        dialect = csv.Sniffer().sniff(csv_file.read(1024))  # To recognise a dialect of csv file
+        csv_file.seek(0)  # Move to  the start of the file
+        reader = csv.reader(csv_file, dialect)
+
+        # Writing to the new file
+        with open(newfile, 'w') as new_file:
+            csv_writer = csv.writer(new_file)
+            for line in reader:
+                csv_writer.writerow(line)
+    print('Without header')
 
 # good to make property
 def reader_dialected(file='ac.csv'):
@@ -74,7 +90,6 @@ def start(args):
     if header_check():
         print('With header')
         with_header(args)
-
     else:
         print('Without header')
         without_header(args)
@@ -152,8 +167,6 @@ def filtering(args):
                         print('Dont mutch')
                         pass
 
-#by rows [0-9]+(\.[0-9]+){3}
-
 
 def myParser(args):
     if args.filtering:
@@ -166,8 +179,6 @@ def myParser(args):
 
 
 if __name__ == "__main__":
-    # row_tables_select()
-    # start()
 
     # parser runtime
     # start_time = datetime.now()
@@ -214,7 +225,6 @@ if __name__ == "__main__":
 
 
 '''
-# Файл CSV должен содержать следующие колонки:
-# columns = ("MAC address", "hostname", "IPv4(null)", "IPv6(null)", "netmask(xxx.xxx.xxx.xxx)", "user login", "full user name", "email", "ssh private key", "ssh public key", "description host", "list of installed app","UUID")
 
+#by rows [0-9]+(\.[0-9]+){3}
 
