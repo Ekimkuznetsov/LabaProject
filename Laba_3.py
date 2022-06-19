@@ -6,7 +6,6 @@ import logging
 from datetime import datetime
 
 
-
 # The verbose function to set the level of Logging
 def verbose_func(arg):
     if arg == 1:
@@ -17,21 +16,18 @@ def verbose_func(arg):
         print("Level INFO set")
     elif arg == 3:
         logging.basicConfig(level="DEBUG")
-        print("Level DEBUG set")
     else:
-        logging.warning(f'Verbose mode set to level "WARNING": ')
+        logging.basicConfig(level="INFO")
 
 
 # The function to generate tokens list for the password of set length
 def set_length(length=10):
-    global num
     tokens_list = ""
-
     for i in range(length):
         tokens_list += random.choice(["a", "A", "d"])       #Randome chose from 3 types of tokens
 
     tokens_list = (tokens_list + "_") * num
-    logging.debug(f'tokens_list generated : {tokens_list}') #Logging message
+    #logging.info(f'tokens_list generated : {tokens_list}') #Logging message
     password_gen(tokens_list)                               #Start of password_gen function with clean list of tokens
 
 
@@ -43,7 +39,7 @@ def from_file(n):
         for line in lines:
             file_line = line.strip()
             file_list += file_line + "_%"
-    logging.debug(f'List of tokens from file generated:  {file_list}')
+    #logging.info(f'List of tokens from file generated:  {file_list}')
     return tokens_l(file_list)
 
 
@@ -55,7 +51,7 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
         template = raw_tokens[:-1]
     else:
         template = raw_tokens
-        logging.info(f'Normal operation going:')
+        #logging.info(f'Normal operation going:')
     #To solve "[" case
     if "[" in template:
         a = int(template.index("["))
@@ -64,7 +60,7 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
         d = c.replace("%", "")
         template = template.replace(template[a:b+1], d)
     template = template.split("%")
-    logging.debug(f'Template generated:  {template}')
+    #logging.info(f'Template generated:  {template}')
     list_of_tokens(template)
 
 
@@ -102,7 +98,7 @@ def list_of_tokens(template):
             block = count * type_token
         tokens_list += block
     tokens_list *= num
-    logger.debug(f'List of tokens generated: {tokens_list}')
+    #logger.info(f'List of tokens generated: {tokens_list}')
     password_gen(tokens_list)
 
 #The Function to generate password from the list
@@ -126,29 +122,22 @@ def password_gen(tokens_list):
             pas += "_"
     if "_" in pas:
         pas = pas.replace("_", " ")
-    logging.debug(f'Password generated:  {pas}')
+    #logging.info(f'Password generated:  {pas}')
     print("Your password(s) is: \n", pas)
     print("Working time: ", datetime.now() - start_time)
 
 #The Function to Parse CLI
 def myParser(args):
-    if args.count != None:
-        if args.verbose != None:
-            verbose_func(args.verbose)
-            global num
-            num = args.count
-            if args.template != None:
-                tokens_l(args.template)
-            elif args.length != None:
-                set_length(args.length)
-            elif args.file != None:
-                n = args.file
-                from_file(n)
-            else:
-                print("nothing to work with")
-        else:
-            logger.warning(f"Nothing to show")
-            print("Nothing to show")
+    verbose_func(args.verbose)
+    global num
+    num = args.count
+    if args.template != None:
+        tokens_l(args.template)
+    elif args.length != None:
+        set_length(args.length)
+    elif args.file != None:
+        nFile = args.file
+        from_file(nFile)
     else:
         logger.warning(f"Ammount of passwords set to 0. <-c> <amount> ")
         print("Ammount of passwords set to 0. <-c> <amount> ")
