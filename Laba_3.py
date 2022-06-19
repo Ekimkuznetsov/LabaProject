@@ -11,11 +11,9 @@ def verbose_func(arg):
     if arg == 1:
         logging.basicConfig(level="WARNING")
         print("Level WARNING set")
-    elif arg == 2:
-        logging.basicConfig(level="INFO")
-        print("Level INFO set")
     elif arg == 3:
         logging.basicConfig(level="DEBUG")
+        print("Level DEBUG set")
     else:
         logging.basicConfig(level="INFO")
 
@@ -68,7 +66,6 @@ def tokens_l(raw_tokens = "A4%d3%-%a2"):
 def list_of_tokens(template):
     tokens = ["d", "A", "a", "p", "-", "@", "_"]
     tokens_list = []
-    global num
     for token in template:
         type_token = ''
         i = 0
@@ -123,8 +120,9 @@ def password_gen(tokens_list):
     if "_" in pas:
         pas = pas.replace("_", " ")
     #logging.info(f'Password generated:  {pas}')
-    print("Your password(s) is: \n", pas)
+    #print("Your password(s) is: \n", pas)
     print("Working time: ", datetime.now() - start_time)
+
 
 #The Function to Parse CLI
 def myParser(args):
