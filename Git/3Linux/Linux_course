@@ -1,0 +1,72 @@
+#find
+find / -name 'search.txt'
+find /etc -name '*.txt'
+-i - case insensitive
+-type - find (c-devices, l- lincs, d-dirs, f-files) specifically for type
+-user - search by user
+
+#locate
+locate -i "search.txt"
+The same, faster, but lower options. Uses database "sudo updatedb"
+
+#which  - Returns the location of a command based on the path settings
+which python     --- returns location (/usr/bin/python)
+
+#whereis - Returns the location of the binnary, source file(s) and man pages. Will return multipleversions of a file if they exist
+whereis python ------- A lot of info about python (linked locations)
+whereis python | tr " " '\n'  --------------    tr- translate (changes of the spaces to new simbol)
+
+#type - Returns information about the command type. Details are based on how command relates to the shell configuration.
+type python -------------   Shows some info like: "python is /usr/bin/python"
+type -a ls -------------    More info
+
+#cat
+cat text.txt | more
+cat test.csv | sort | head -10
+cat < test3.txt
+cat varlist 2>errror.txt
+cat varlist 2> /dev/null
+
+#less
+/word - keyword search inside multipleversions
++F - interactive
+sudo less +F /var/log/syslog
+
+#sort
+sort -r test.txt ------- Reverse sort
+
+#diff -Compares 2 files or directories line by line
+-Several options for ignoring , filtering the comparison
+-Output can be displayed in ed format, context mode, or unified format
+diff test1.txt test2.text
+-c - context
+
+#comm - Compare two SORTED files line by line
+-Output is displayed in 3 columns, unique to file1, uniqe to file2, and the same in both files
+comm test1 test2
+
+#cmp -Compares two files, byte by byte, and returns the position of the first difference
+cmp test1.txt test2.txt
+----------------------------------REGULAR EXP----------------------------------
+grep '^The ' filename
+grep '^T[a-z][^e]' filename
+grep -E -o "\b[A-Za-z0-9.+%-]+@[A-Za-z0-9]+\.[A-Za-z]{2,6}\b" test.txt  (email)
+___________________________________END-----------------------------------------
+#chmod - Change the permissions of te file
+"-" - file, "l" - link, "d" - directory
+Special Permissions:
+suid 4000
+sguid 2000
+sticky 1000
+
+#chown - change the owner of the file
+chown newuser:existing_group file
+or :New_group
+
+
+
+
+
+
+
+#chown -
