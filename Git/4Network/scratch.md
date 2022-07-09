@@ -1,9 +1,5 @@
-# Task2
-1) gitlab
-2) network
-3) linux
-4) Vagrant
-#5) Женя 
+﻿# Task2
+
 
 
 
@@ -39,6 +35,7 @@ curl -o - -I http://google.com
 
 
 wget http://aligajani.com -O - 2>/dev/null | grep -oP 'href="\Khttp:.+?"' | sed 's/"//' | xargs curl -I  >> test.log
+-H 'Accept:aplication'
 
 1) HTTP/1.1 **301** Moved Permanently
 Server: nginx
@@ -116,15 +113,90 @@ X-LI-UUID: AAXi/2nMyQELLlXAm3spAg==
 X-Cache: CONFIG_NOCACHE
 X-MSEdge-Ref: Ref A: 0D590B3E6C0C4085998AC53B4E194163 Ref B: WAW01EDGE0405 Ref C: 2022-07-04T19:05:03Z
 Date: Mon, 04 Jul 2022 19:05:02 GMT
-8) 
+8) curl -X POST -I www.google.com
+HTTP/1.0 411 Length Required
+Content-Type: text/html; charset=UTF-8
+Referrer-Policy: no-referrer
+Content-Length: 1564
+Date: Wed, 06 Jul 2022 18:07:13 GMT
+9) curl -X AAA -I http://google.com
+HTTP/1.1 405 Method Not Allowed
+Content-Type: text/html; charset=UTF-8
+Referrer-Policy: no-referrer
+Content-Length: 1588
+Date: Wed, 06 Jul 2022 18:13:40 GMT
+
+
+
+## 2.2
+curl -Iv http://google.com
+*   Trying 142.250.186.46:80...
+* TCP_NODELAY set
+* Connected to google.com (142.250.186.46) port 80 (#0)
+> HEAD / HTTP/1.1                        === HTTP version 
+> Host: google.com                       === Host name
+> User-Agent: curl/7.68.0                === The User-Agent request header is a characteristic string that lets servers 
+                                              and network peers identify the application, operating system, vendor, 
+                                              and/or version of the requesting user agent.
+> Accept: */*                            === The Accept request HTTP header indicates which content types, expressed 
+                                                as MIME types, the client is able to understand. The server uses content 
+                                                negotiation to select one of the proposals and informs the client of the 
+                                                choice with the Content-Type response header. Browsers set required 
+                                                values for this header based on the context of the request.
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 301 Moved Permanently          === Status code
+HTTP/1.1 301 Moved Permanently            
+< Location: http://www.google.com/        === Location - The Location response header indicates the URL to redirect a page to.
+Location: http://www.google.com/          
+< Content-Type: text/html; charset=UTF-8  === Content-Type - The Content-Type representation header is used to indicate 
+                                              the original media type of the resource (prior to any content encoding 
+                                              applied for sending).
+Content-Type: text/html; charset=UTF-8    
+< Date: Wed, 06 Jul 2022 18:31:26 GMT     === Date - The Date general HTTP header contains the date and time at which 
+                                              the message originated.
+Date: Wed, 06 Jul 2022 18:31:26 GMT       
+< Expires: Fri, 05 Aug 2022 18:31:26 GMT  === Expires. The Expires HTTP header contains the date/time after which the response is considered expired.
+Expires: Fri, 05 Aug 2022 18:31:26 GMT    
+< Cache-Control: public, max-age=2592000  === Cache-Control. The Cache-Control HTTP header field holds directives 
+                                              (instructions) — in both requests and responses — that control caching in 
+                                              browsers and shared caches (e.g. Proxies, CDNs).
+Cache-Control: public, max-age=2592000    
+< Server: gws                             === Server. Server The Server header describes the software used by the origin 
+                                              server that handled the request — that is, the server that generated the response.
+Server: gws
+< Content-Length: 219                     === Content-Length. The Content-Length header indicates the size of the message 
+                                              body, in bytes, sent to the recipient.
+Content-Length: 219
+< X-XSS-Protection: 0                     === X-XSS-Protection. The HTTP X-XSS-Protection response header is a feature 
+                                              of Internet Explorer, Chrome and Safari that stops pages from loading when 
+                                              they detect reflected cross-site scripting (XSS) attacks
+X-XSS-Protection: 0
+< X-Frame-Options: SAMEORIGIN             === X-Frame-Options. The X-Frame-Options HTTP response header can be used to 
+                                              indicate whether or not a browser should be allowed to render a page in a 
+                                              <frame>, <iframe>, <embed> or <object>
+X-Frame-Options: SAMEORIGIN                                    
+
+< 
+* Connection #0 to host google.com left intact
 
 
 
 
-
-wget | curl -I ${} >> test.log
-
+curl -Iv -H 'Testing: Test to check'  https://stackoverflow.com
 wget http://aligajani.com -O - 2>/dev/null | grep -oP 'href="\Khttp:.+?"' | sed 's/"//' | xargs curl -I ${} >> test.log
+
+## 2.4
+sudo tcpdump -xx | grep -E 'Age|GET'
+
+Headers and Methods filter
+![Image alt](Images/3.png)
+
+Filter by Methods
+![Image alt](Images/1.png)
+Filter by Headers
+![Image alt](Images/2.png)
+
 
 
 
